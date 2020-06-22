@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardSurvey"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_half"
+    tools:showIn="@layout/survey_list_activity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_half">
+
+        <TextView
+            android:id="@+id/surveyTitle"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/surveyDescription"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/surveyDescription"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:fontFamily="sans-serif-light"
+            android:lineSpacingMultiplier="1.5"
+            app:layout_constraintBottom_toTopOf="@+id/surveyExpiration"
+            app:layout_constraintTop_toBottomOf="@+id/surveyTitle"
+            tools:text="Subtitle" />
+
+        <TextView
+            android:id="@+id/surveyExpiration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/surveyDescription"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:textColor="?attr/colorSecondary"
+            app:layout_constraintBottom_toTopOf="@+id/progressText"
+            app:layout_constraintTop_toBottomOf="@+id/surveyDescription"
+            tools:text="Expires in: 24h 30m 48s" />
+
+        <TextView
+            android:id="@+id/progressText"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/action"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/surveyExpiration"
+            tools:text="Completed" />
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:text="@string/survey_start"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:textColor="?attr/colorSecondary"
+            app:layout_constraintBaseline_toBaselineOf="@id/progressText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/progressText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

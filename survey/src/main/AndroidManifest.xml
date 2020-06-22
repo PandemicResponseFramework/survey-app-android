@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="pandemic.response.framework">
+
+    <uses-feature
+        android:name="android.hardware.sensor.stepcounter"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.SurveyApp.NoActionBar">
+        <activity
+            android:name=".StartActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AboutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pandemic.response.framework.SurveyListActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true"
+            android:launchMode="standard"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".SurveyListActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:parentActivityName=".SurveyListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pandemic.response.framework.SurveyListActivity" />
+        </activity>
+
+        <service
+            android:name=".FCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_default_channel_id" />
+    </application>
+
+</manifest>

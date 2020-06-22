@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="Widget.SurveyApp.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="strokeColor">?attr/colorSecondary</item>
+    </style>
+</resources>
