@@ -1,4 +1,4 @@
-package pandemic.response.framework.workers
+package pandemic.response.framework.survey
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -7,20 +7,21 @@ import androidx.work.WorkerParameters
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import pandemic.response.framework.SurveyBaseApp
+import pandemic.response.framework.common.handleWorkerError
 
-const val KEY_DEVICE_TOKEN = "token"
+const val KEY_JSON = "json"
+const val KEY_SURVEY_ID = "surveyNameId"
 
-class DeviceTokenWorker(
+class SurveyResponseWorker(
         context: Context,
         params: WorkerParameters
 ) : CoroutineWorker(context, params) {
-
     override suspend fun doWork(): Result {
         return try {
-            val json = inputData.getString(KEY_DEVICE_TOKEN)!!
+            val json = inputData.getString(KEY_JSON)!!
             val requestBody = json.toRequestBody("application/json".toMediaType())
-            val app = (applicationContext as SurveyBaseApp)
-            app.authApi.addDeviceToken("Bearer ${app.prefs.token}", requestBody)
+            val surveyNameId = inputData.getString(KEY_SURVEY_ID)!!
+            (applicationContext as SurveyBaseApp).surveyApi.sendQuestionAnswer(surveyNameId, requestBody)
             Result.success()
         } catch (e: Throwable) {
             applicationContext.handleWorkerError(e)
@@ -28,6 +29,9 @@ class DeviceTokenWorker(
     }
 }
 
-fun createData(deviceToken: String): Data = Data.Builder()
-        .putString(KEY_DEVICE_TOKEN, deviceToken)
+fun createData(surveyNameId: String, responeJson: String): Data = Data.Builder()
+        .putString(KEY_JSON, responeJson)
+        .putString(KEY_SURVEY_ID, surveyNameId)
         .build()
+
+

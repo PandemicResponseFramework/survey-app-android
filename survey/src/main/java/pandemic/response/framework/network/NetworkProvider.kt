@@ -1,8 +1,9 @@
-package pandemic.response.framework.repo
+package pandemic.response.framework.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import okhttp3.OkHttpClient
+import pandemic.response.framework.common.UserManager
 import pandemic.response.framework.dto.*
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -18,20 +19,20 @@ fun provideMoshi() = Moshi.Builder().add(
 )
         .build()
 
-fun provideOkHttpClient(prefs: Prefs) = OkHttpClient.Builder()
+fun provideOkHttpClient(userManager: UserManager) = OkHttpClient.Builder()
         .addInterceptor {
-            val token = prefs.token
+            val token = userManager.token
             val request =
                     if (token != null) it.request().newBuilder()
-                            .header("Authorization", "Bearer ${prefs.token}")
+                            .header("Authorization", "Bearer ${userManager.token}")
                             .build()
                     else it.request()
             it.proceed(request)
         }
         .build()
 
-fun provideSurveyApi(host: String, prefs: Prefs) = Retrofit.Builder()
-        .client(provideOkHttpClient(prefs))
+fun provideSurveyApi(host: String, userManager: UserManager) = Retrofit.Builder()
+        .client(provideOkHttpClient(userManager))
         .addConverterFactory(MoshiConverterFactory.create(provideMoshi()))
         .baseUrl(host)
         .build().create(SurveyApi::class.java)

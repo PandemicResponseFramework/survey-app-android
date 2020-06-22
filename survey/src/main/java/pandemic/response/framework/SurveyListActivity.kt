@@ -11,10 +11,10 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.navigation.NavigationView
 import pandemic.response.framework.MainActivity.Companion.SURVEY_ID
+import pandemic.response.framework.common.showError
 import pandemic.response.framework.databinding.SurveyListActivityBinding
 import pandemic.response.framework.dto.SurveyStatus
 import pandemic.response.framework.util.launchWithPostponeLoading
-import pandemic.response.framework.workers.showError
 import timber.log.Timber
 import kotlin.math.abs
 

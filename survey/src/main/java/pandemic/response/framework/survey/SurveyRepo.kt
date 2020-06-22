@@ -1,4 +1,4 @@
-package pandemic.response.framework.repo
+package pandemic.response.framework.survey
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -7,9 +7,9 @@ import pandemic.response.framework.dto.Survey
 import pandemic.response.framework.dto.SurveyResponse
 import pandemic.response.framework.dto.SurveyStatus
 import pandemic.response.framework.dto.SurveyStatus.Status
-import pandemic.response.framework.workers.SurveyManager
+import pandemic.response.framework.network.SurveyApi
 
-class SurveyRepo(val api: SurveyApi, val surveyManager: SurveyManager) {
+class SurveyRepo(val api: SurveyApi, val surveyResponseManager: SurveyResponseManager) {
 
     private var statusList: List<SurveyStatus>? = null
 
@@ -45,13 +45,13 @@ class SurveyRepo(val api: SurveyApi, val surveyManager: SurveyManager) {
             } ?: true // doesn't depend on other survey
 
 
-    fun reset() {
+    fun clearCache() {
         statusList = null
         statusMap.clear()
     }
 
     fun answer(surveyStatus: SurveyStatus, answer: SurveyResponse, nextQuestion: Question?) {
-        surveyManager.postSurveyResponse(surveyStatus.nameId, answer)
+        surveyResponseManager.postSurveyResponse(surveyStatus.nameId, answer)
 
         val newStatus = when {
             nextQuestion == null -> Status.COMPLETED
@@ -60,7 +60,6 @@ class SurveyRepo(val api: SurveyApi, val surveyManager: SurveyManager) {
             else -> Status.INCOMPLETE//primary question
         }
         setStatus(surveyStatus, newStatus, nextQuestion?.id)
-
     }
 
     private fun isPrimaryQuestion(surveyNameId: String, question: Question) =

@@ -2,7 +2,8 @@ package pandemic.response.framework.dto
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import pandemic.response.framework.repo.provideMoshi
+import pandemic.response.framework.network.provideMoshi
+import pandemic.response.framework.survey.QuestionIterator
 
 internal class QuestionIteratorTest {
 

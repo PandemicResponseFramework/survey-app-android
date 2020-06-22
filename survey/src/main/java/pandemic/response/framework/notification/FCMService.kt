@@ -1,6 +1,7 @@
-package pandemic.response.framework
+package pandemic.response.framework.notification
 
 import com.google.firebase.messaging.FirebaseMessagingService
+import pandemic.response.framework.SurveyBaseApp
 import timber.log.Timber
 
 class FCMService : FirebaseMessagingService() {
@@ -8,7 +9,6 @@ class FCMService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Timber.d("Device token %s", token)
-        if ((this@FCMService.applicationContext as SurveyBaseApp).prefs.token != null)
-            (this@FCMService.applicationContext as SurveyBaseApp).surveyManager.postDeviceToken(token)
+        (this@FCMService.applicationContext as SurveyBaseApp).pushNotificationManager.postDeviceToken(token)
     }
 }

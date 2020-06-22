@@ -1,4 +1,4 @@
-package pandemic.response.framework.repo
+package pandemic.response.framework.network
 
 import okhttp3.RequestBody
 import pandemic.response.framework.dto.StepCount
