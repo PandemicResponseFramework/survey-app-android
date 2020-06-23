@@ -14,7 +14,6 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_large"
         android:textAlignment="textStart"
-        android:textSize="22sp"
         tools:text="Question" />
 
     <ScrollView

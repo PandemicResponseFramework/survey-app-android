@@ -14,7 +14,6 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_large"
         android:textAlignment="textStart"
-        android:textSize="22sp"
         tools:text="Question" />
 
     <RadioGroup
@@ -27,21 +26,21 @@
 
         <RadioButton
             android:id="@+id/radioYes"
+            style="?attr/textAppearanceBody1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
-            android:text="@string/answer_yes"
-            android:textSize="16sp" />
+            android:text="@string/answer_yes" />
 
         <RadioButton
             android:id="@+id/radioNo"
+            style="?attr/textAppearanceBody1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:button="@null"
             android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
-            android:text="@string/answer_no"
-            android:textSize="16sp" />
+            android:text="@string/answer_no" />
     </RadioGroup>
 
 </LinearLayout>

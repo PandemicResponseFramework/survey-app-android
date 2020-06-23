@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/radioButton"
+    style="?attr/textAppearanceBody1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:button="@null"
-    android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
-    android:textSize="16sp" />
+    android:drawableEnd="?android:attr/listChoiceIndicatorSingle" />
