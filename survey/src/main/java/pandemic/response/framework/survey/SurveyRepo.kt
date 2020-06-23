@@ -52,22 +52,20 @@ class SurveyRepo(val api: SurveyApi, val surveyResponseManager: SurveyResponseMa
 
     fun answer(surveyStatus: SurveyStatus, answer: SurveyResponse, nextQuestion: Question?) {
         surveyResponseManager.postSurveyResponse(surveyStatus.nameId, answer)
-
-        val newStatus = when {
-            nextQuestion == null -> Status.COMPLETED
-            else -> Status.INCOMPLETE//primary question
-        }
+        val newStatus = if (nextQuestion == null) Status.COMPLETED else Status.INCOMPLETE
         setStatus(surveyStatus, newStatus, nextQuestion?.id)
     }
 
     private fun isPrimaryQuestion(surveyNameId: String, question: Question) =
             surveyMap[surveyNameId]?.questions?.contains(question) ?: false
 
-    private fun setStatus(surveyStatus: SurveyStatus, status: Status, nextQuestionId: Long?) {
-        if (surveyStatus.status == status && surveyStatus.nextQuestionId == nextQuestionId) return
-        val newSurveyStatus = surveyStatus.copy(nextQuestionId = nextQuestionId, status = status)
-        statusMap.put(surveyStatus.nameId, newSurveyStatus)
-        statusList =
-                statusList?.map { if (it.nameId == surveyStatus.nameId) newSurveyStatus else it }
-    }
+    private fun setStatus(surveyStatus: SurveyStatus, newStatus: Status, newNextQuestionId: Long?) =
+            statusMap[surveyStatus.nameId]?.run {
+                if (surveyStatus.token != token) return@run
+                if (status == newStatus && nextQuestionId == newNextQuestionId) return@run
+                val newSurveyStatus = copy(status = newStatus, nextQuestionId = newNextQuestionId)
+                statusMap.put(nameId, newSurveyStatus)
+                statusList =
+                        statusList?.map { if (it.nameId == nameId) newSurveyStatus else it }
+            }
 }

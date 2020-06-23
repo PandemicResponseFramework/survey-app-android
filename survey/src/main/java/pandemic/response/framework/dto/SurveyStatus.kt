@@ -9,7 +9,7 @@ data class SurveyStatus(
         val nameId: String,
         val description: String?,
         val title: String,
-        var nextQuestionId: Long?,
+        val nextQuestionId: Long?,
         val status: Status = Status.NEW,
         val token: String,
         val startTime: Long?,

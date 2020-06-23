@@ -67,15 +67,15 @@ class SurveyListActivity : BaseActivity(), NavigationView.OnNavigationItemSelect
         })
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         loadSurveys(false)
     }
 
     private fun loadSurveys(fresh: Boolean) = lifecycleScope.launchWithPostponeLoading(::loading) {
         try {
-            val survey = surveyRepo.getSurveyStatusList(fresh)
-            success(survey)
+            val surveyStatusList = surveyRepo.getSurveyStatusList(fresh)
+            success(surveyStatusList)
         } catch (e: Throwable) {
             error(e)
         } finally {
@@ -83,8 +83,8 @@ class SurveyListActivity : BaseActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    private fun success(surveys: List<SurveyStatus>) {
-        surveyAdapter.submitList(surveys)
+    private fun success(surveyStatusList: List<SurveyStatus>) {
+        surveyAdapter.submitList(surveyStatusList)
     }
 
     private fun error(e: Throwable) {
