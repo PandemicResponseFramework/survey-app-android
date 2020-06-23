@@ -36,6 +36,7 @@
     <string name="expiration3"> Expires in: %1$d min</string>
     <string name="decline">Decline</string>
     <string name="accept">Accept</string>
+    <string name="button_ok">OK</string>
     <string name="about_us">About us</string>
     <string name="thank_you">Thank you for completing the \n %1$s survey!</string>
     <string name="continue_survey">Continue</string>
@@ -50,4 +51,5 @@
     <string name="agree_terms_conditions">I agree with the Terms and Conditions</string>
     <string name="agree_privacy_policy">I agree with the Privacy Policy</string>
     <string name="content_description_success">Success icon</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

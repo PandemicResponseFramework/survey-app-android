@@ -3,6 +3,7 @@ package pandemic.response.framework
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pandemic.response.framework.databinding.ActionContainerBinding
@@ -10,7 +11,8 @@ import pandemic.response.framework.dto.Verification
 import timber.log.Timber
 
 
-class RegisterActivity : BaseActivity() {
+class RegisterActivity : BaseActivity(), TermAndCondDialog.TermsConditionCallBack {
+
     private val binding by lazy {
         ActionContainerBinding.inflate(layoutInflater)
     }
@@ -30,7 +32,7 @@ class RegisterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        register()
+        showTermAndConditionsDialog()
     }
 
     private fun register() = lifecycleScope.launch {
@@ -64,5 +66,22 @@ class RegisterActivity : BaseActivity() {
         button.setText(R.string.action_retry)
         button.setOnClickListener { register() }
         progressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showTermAndConditionsDialog() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction.add(android.R.id.content, TermAndCondDialog::class.java, null, null)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun returnTermsConditionAcceptance(areAccepted: Boolean) {
+        userManager.termAndConditionAccepted = areAccepted
+        if (areAccepted) {
+            register()
+        } else {
+            finish()
+        }
     }
 }

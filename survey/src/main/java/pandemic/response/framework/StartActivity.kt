@@ -4,7 +4,6 @@ import android.app.TaskStackBuilder
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.FragmentTransaction
 import pandemic.response.framework.MainActivity.Companion.SURVEY_ID
 import pandemic.response.framework.databinding.ActionContainerBinding
 import pandemic.response.framework.steps.PERMISSION_ACTIVITY_RECOGNITION
@@ -13,8 +12,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.PermissionRequest
 
 
-class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
-        TermAndCondDialog.TermsConditionCallBack {
+class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
     companion object {
         const val KEY_SURVEY_ID_NAME = "surveyNameId"
@@ -32,24 +30,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        checkTermAndConditions()
-    }
-
-    private fun checkTermAndConditions() {
-        if (!userManager.termAndConditionAccepted) {
-            showTermAndConditionsDialog()
-        } else {
-            checkRegistration()
-        }
-    }
-
-    override fun returnTermsConditionAcceptance(areAccepted: Boolean) {
-        userManager.termAndConditionAccepted = areAccepted
-        if (areAccepted) {
-            checkRegistration()
-        } else {
-            finish()
-        }
+        checkRegistration()
     }
 
     private fun checkRegistration() {
@@ -73,13 +54,13 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
             stepsManager.stop()
             // Do not have permissions, request them now
             val request = PermissionRequest.Builder(
-                    this,
-                    PERMISSION_REQUEST_CODE,
-                    PERMISSION_ACTIVITY_RECOGNITION
+                this,
+                PERMISSION_REQUEST_CODE,
+                PERMISSION_ACTIVITY_RECOGNITION
             )
-                    .setRationale(R.string.steps_permission_rationale)
-                    .setPositiveButtonText("OK")
-                    .setNegativeButtonText("Cancel")
+                .setRationale(R.string.steps_permission_rationale)
+                .setPositiveButtonText(R.string.button_ok)
+                .setNegativeButtonText(R.string.button_cancel)
                     .build()
 
             EasyPermissions.requestPermissions(request)
@@ -131,11 +112,4 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
         progressBar.visibility = View.INVISIBLE
     }
 
-    private fun showTermAndConditionsDialog() {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        transaction.add(android.R.id.content, TermAndCondDialog::class.java, null, null)
-                .addToBackStack(null)
-                .commit()
-    }
 }

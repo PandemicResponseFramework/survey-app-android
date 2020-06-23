@@ -7,11 +7,11 @@
 
     <TextView
         android:id="@+id/thanksMessage"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_xlarge"
         android:gravity="center"
-        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/completeSurveyImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,10 +34,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/spacing_large"
-        android:layout_marginEnd="@dimen/margin_normal"
-        android:layout_marginBottom="@dimen/margin_normal"
         android:layout_weight="0.5"
         android:text="@string/continue_survey"
         app:layout_constraintBottom_toBottomOf="parent"
