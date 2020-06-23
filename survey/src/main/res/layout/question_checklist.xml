@@ -27,7 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_xlarge"
-            android:orientation="vertical" />
+            android:divider="@color/neutral_one"
+            android:orientation="vertical"
+            android:showDividers="middle" />
     </ScrollView>
 
 </LinearLayout>

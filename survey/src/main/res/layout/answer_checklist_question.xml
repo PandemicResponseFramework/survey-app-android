@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:button="@null"
     android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-    android:gravity="start|center_vertical" />
+    android:gravity="start|center_vertical"
+    android:textSize="16sp" />
