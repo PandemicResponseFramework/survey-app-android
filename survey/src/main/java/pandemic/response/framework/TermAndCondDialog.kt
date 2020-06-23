@@ -7,30 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.LinearLayout
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import pandemic.response.framework.databinding.TermsConditionsDialogBinding
-import pandemic.response.framework.repo.Prefs
 
 class TermAndCondDialog : DialogFragment() {
 
-    internal lateinit var termsConditionCallBack: TermsConditionCallBack
-
-    private var termAndConditionAccepted = false
+    private var termsConditionCallBack: TermsConditionCallBack? = null
 
     private var _binding: TermsConditionsDialogBinding? = null
     private val binding get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        termAndConditionAccepted = Prefs(context).termAndConditionAccepted
-        if (!termAndConditionAccepted)
-            try {
-                termsConditionCallBack = context as TermsConditionCallBack
-            } catch (e: ClassCastException) {
-                throw ClassCastException(("$context must implement TermsConditionCallBack"))
-            }
+        termsConditionCallBack = context as? TermsConditionCallBack
     }
 
     override fun onCreateView(
@@ -59,10 +49,7 @@ class TermAndCondDialog : DialogFragment() {
             closeDialogWithResponse(false)
         }
 
-        if (termAndConditionAccepted) {
-            val layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.weight = 0.9f
-            binding.acceptBtn.layoutParams = layoutParams
+        if (termsConditionCallBack == null) {
             binding.declineBtn.visibility = View.GONE
             binding.acceptBtn.text = resources.getText(R.string.close_text)
             binding.acceptBtn.isEnabled = true
@@ -74,8 +61,7 @@ class TermAndCondDialog : DialogFragment() {
     }
 
     private fun closeDialogWithResponse(areAccepted: Boolean) {
-        if (!termAndConditionAccepted && ::termsConditionCallBack.isInitialized)
-            termsConditionCallBack.returnTermsConditionAcceptance(areAccepted)
+        termsConditionCallBack?.returnTermsConditionAcceptance(areAccepted)
         dismiss()
     }
 
@@ -110,5 +96,4 @@ class TermAndCondDialog : DialogFragment() {
             requireContext().assets.open("toc.html").bufferedReader().use {
                 it.readText()
             }
-
 }

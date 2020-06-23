@@ -1,4 +1,4 @@
-package pandemic.response.framework.workers
+package pandemic.response.framework.common
 
 import android.app.Activity
 import android.content.Context
@@ -8,7 +8,7 @@ import androidx.work.ListenableWorker.Result
 import com.google.android.material.snackbar.Snackbar
 import pandemic.response.framework.R
 import pandemic.response.framework.SurveyBaseApp
-import pandemic.response.framework.workers.UIError.*
+import pandemic.response.framework.common.UIError.*
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -21,12 +21,12 @@ fun Context.handleWorkerError(e: Throwable): Result {
         is HttpException -> when (e.code()) {
             408, 429, 503 -> Result.retry()
             401, 403 -> { //token invalid or unregistered
-                (applicationContext as SurveyBaseApp).unregister()
+                (applicationContext as SurveyBaseApp).userManager.unregister()
                 Result.failure()
             }
             409 -> { //conflict survey token expired
                 //survey list as is out of sync
-                (applicationContext as SurveyBaseApp).surveyRepo.reset()
+                (applicationContext as SurveyBaseApp).surveyRepo.clearCache()
                 Result.failure()
             }
             else -> Result.failure()
@@ -42,11 +42,11 @@ fun Context.handleError(e: Throwable, resource: String): UIError {
         is IOException -> Retry(R.string.error_connection)
         is HttpException -> when (e.code()) {
             401, 403 -> {
-                (applicationContext as SurveyBaseApp).unregister()
+                (applicationContext as SurveyBaseApp).userManager.unregister()
                 Unregistered(R.string.error_unregister)
             }
             404 -> {
-                (applicationContext as SurveyBaseApp).surveyRepo.reset()
+                (applicationContext as SurveyBaseApp).surveyRepo.clearCache()
                 NotFound(R.string.error_not_found)
             }
             in 500..599 -> Retry(R.string.error_server_internal)

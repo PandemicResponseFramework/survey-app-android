@@ -1,6 +1,6 @@
-package pandemic.response.framework.repo
+package pandemic.response.framework.network
 
-import okhttp3.RequestBody
+import pandemic.response.framework.dto.DeviceToken
 import pandemic.response.framework.dto.TokenResponse
 import pandemic.response.framework.dto.Verification
 import retrofit2.http.Body
@@ -18,6 +18,6 @@ interface RegisterApi {
     @POST("auth/devicetoken")
     suspend fun addDeviceToken(
             @Header("Authorization") token: String,
-            @Body body: RequestBody
+            @Body deviceToken: DeviceToken
     )
 }

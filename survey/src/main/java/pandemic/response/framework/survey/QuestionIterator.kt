@@ -1,5 +1,8 @@
-package pandemic.response.framework.dto
+package pandemic.response.framework.survey
 
+import pandemic.response.framework.dto.Question
+import pandemic.response.framework.dto.Survey
+import pandemic.response.framework.dto.SurveyResponse
 import java.util.*
 
 class QuestionIterator(private var survey: Survey, lastKnownQuestion: Long? = null) {

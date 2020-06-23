@@ -4,26 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.iid.FirebaseInstanceId
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Credentials
 import pandemic.response.framework.databinding.ActionContainerBinding
 import pandemic.response.framework.dto.Verification
 import timber.log.Timber
-import java.io.IOException
 
 
 class RegisterActivity : BaseActivity() {
     private val binding by lazy {
         ActionContainerBinding.inflate(layoutInflater)
     }
-
-    private val basicAuthToken
-        get() = Credentials.basic(
-                (application as SurveyBaseApp).clientId,
-                (application as SurveyBaseApp).clientSecret
-        )
 
     private val verification by lazy {
         val pathSegments = intent.data?.pathSegments
@@ -46,23 +36,13 @@ class RegisterActivity : BaseActivity() {
     private fun register() = lifecycleScope.launch {
         loading()
         try {
-            val authNToken = authApi.verify(basicAuthToken, verification).token
-            (application as SurveyBaseApp).unregister()
-            prefs.token = authNToken
-            invalidateDeviceToken()
+            userManager.register(verification)
             success()
         } catch (e: Throwable) {
             error(e)
         }
     }
 
-    private fun invalidateDeviceToken() = lifecycleScope.launch(Dispatchers.IO) {
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId()
-        } catch (e: IOException) {
-            Timber.e(e, "fail to delete instance id")
-        }
-    }
 
     private fun loading() = binding.run {
         actionTitle.setText(R.string.register_access)

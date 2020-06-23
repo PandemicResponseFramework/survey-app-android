@@ -2,7 +2,7 @@ package pandemic.response.framework.dto
 
 import com.squareup.moshi.JsonAdapter
 import org.junit.Test
-import pandemic.response.framework.repo.provideMoshi
+import pandemic.response.framework.network.provideMoshi
 
 class SurveyTest {
 

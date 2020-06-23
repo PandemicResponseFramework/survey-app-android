@@ -25,6 +25,10 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
         ActionContainerBinding.inflate(layoutInflater)
     }
 
+    private val stepsManager by lazy {
+        (application as SurveyBaseApp).stepsManager
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -32,7 +36,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     private fun checkTermAndConditions() {
-        if (!prefs.termAndConditionAccepted) {
+        if (!userManager.termAndConditionAccepted) {
             showTermAndConditionsDialog()
         } else {
             checkRegistration()
@@ -40,7 +44,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     override fun returnTermsConditionAcceptance(areAccepted: Boolean) {
-        prefs.termAndConditionAccepted = areAccepted
+        userManager.termAndConditionAccepted = areAccepted
         if (areAccepted) {
             checkRegistration()
         } else {
@@ -49,7 +53,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     private fun checkRegistration() {
-        if (prefs.isRegistered()) {
+        if (userManager.isRegistered()) {
             checkStepCounterRights()
         } else {
             notRegistered()
@@ -66,7 +70,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
             // Already have permission, do the thing
             launch(true)
         } else {
-            surveyManager.cancelStepCounter()
+            stepsManager.stop()
             // Do not have permissions, request them now
             val request = PermissionRequest.Builder(
                     this,
@@ -107,7 +111,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     private fun launch(stepCounterEnable: Boolean) {
-        if (stepCounterEnable) surveyManager.startStepCounter()
+        if (stepCounterEnable) stepsManager.start()
 
         val surveyNameId: String? = intent.getStringExtra(KEY_SURVEY_ID_NAME)
         if (surveyNameId != null) {
