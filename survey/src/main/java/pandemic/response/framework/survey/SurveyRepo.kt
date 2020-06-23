@@ -55,8 +55,6 @@ class SurveyRepo(val api: SurveyApi, val surveyResponseManager: SurveyResponseMa
 
         val newStatus = when {
             nextQuestion == null -> Status.COMPLETED
-            surveyStatus.isCompleted && isPrimaryQuestion(surveyStatus.nameId, nextQuestion) ->
-                Status.COMPLETED
             else -> Status.INCOMPLETE//primary question
         }
         setStatus(surveyStatus, newStatus, nextQuestion?.id)
