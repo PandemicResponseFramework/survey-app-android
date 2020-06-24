@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.CompoundButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
@@ -171,7 +172,8 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
             }
             binding.singleAnswersGroup.setOnCheckedChangeListener { _, checkedId ->
                 selectedChoice.clear()
-                selectedChoice.add(checkedId)
+                if (checkedId != -1)
+                    selectedChoice.add(checkedId)
             }
         }
     }
@@ -206,16 +208,18 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
             BaseViewHolder<RangeQuestion>(binding) {
         override fun bind(question: RangeQuestion) = binding.run {
             questionTitle.text = question.question
-            slider.value = 0f
-//            slider.valueFrom = question.minValue.toFloat()
-//            slider.valueTo = question.maxValue.toFloat()
-
+            slider.value = question.minValue.toFloat()
+            slider.valueFrom = question.minValue.toFloat()
+            slider.valueTo = question.maxValue.toFloat()
+            slider.stepSize = 1f
             minValueText.text = "${question.minValue}"
             maxValueText.text = "${question.maxValue}"
 
             minText.text = question.minText
             maxText.text = question.maxText
-            slider.addOnChangeListener { _, value, _ -> selectedRange = value.roundToInt() }
+            slider.addOnChangeListener { _, value, _ ->
+                selectedRange = value.roundToInt()
+            }
         }
 
     }
@@ -226,11 +230,24 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
             binding.questionTitle.text = question.question
             binding.textInputLayout.editText?.apply {
                 setText(selectedText, TextView.BufferType.EDITABLE)
-
+                isSingleLine = !question.multiline
                 addTextChangedListener {
                     selectedText = it?.toString()
                 }
-
+            }
+            binding.textInputLayout.apply {
+                layoutParams = if (question.multiline) {
+                    LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                } else {
+                    LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                }.apply {
+                    setMargins(
+                            resources.getDimension(R.dimen.margin_normal).toInt(),
+                            resources.getDimension(R.dimen.margin_normal).toInt(),
+                            resources.getDimension(R.dimen.margin_normal).toInt(),
+                            resources.getDimension(R.dimen.margin_normal).toInt()
+                    )
+                }
             }
             binding.textInputLayout.counterMaxLength = question.length
         }

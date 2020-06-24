@@ -1,13 +1,17 @@
 package pandemic.response.framework
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import pandemic.response.framework.common.showError
 import pandemic.response.framework.databinding.QuestionContainerBinding
 import pandemic.response.framework.dto.*
+import pandemic.response.framework.survey.AnswerException
+import pandemic.response.framework.survey.NoAnswerException
 import pandemic.response.framework.survey.QuestionIterator
 import pandemic.response.framework.util.launchWithPostponeLoading
 import timber.log.Timber
@@ -85,14 +89,18 @@ class MainActivity : BaseActivity() {
     }
 
     private fun next() {
-        val answer = getAnswer()
-        if (answer == null) {
-            Snackbar.make(binding.coordinatorLayout, R.string.answer_required, Snackbar.LENGTH_LONG)
-                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-                    .show()
-        } else {
+        try {
+            val answer = getAnswer()
+            hideKeyboard()
             sendResponseAndAdvance(answer)
+        } catch (e: AnswerException) {
+            showSnackBar(e.messageRes)
         }
+    }
+
+    private fun showSnackBar(messageResourceId: Int) {
+        Snackbar.make(binding.coordinatorLayout, messageResourceId, Snackbar.LENGTH_LONG)
+                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show()
     }
 
     private fun skip() {
@@ -111,10 +119,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun getAnswer(): SurveyResponse? = adapter.currentQuestion?.let {
+    private fun getAnswer(): SurveyResponse = adapter.currentQuestion!!.let {
         return when (it) {
             is BooleanQuestion -> {
-                if (adapter.selectedBool == null) null
+                if (adapter.selectedBool == null) throw NoAnswerException
                 else SurveyResponse(
                         questionId = it.id,
                         boolAnswer = adapter.selectedBool,
@@ -123,7 +131,7 @@ class MainActivity : BaseActivity() {
                 )
             }
             is ChoiceQuestion -> {
-                if (adapter.selectedChoice.isEmpty()) return null
+                if (adapter.selectedChoice.isEmpty()) throw NoAnswerException
 
                 val answerIds = mutableListOf<Long>()
                 for (item in adapter.selectedChoice) {
@@ -137,16 +145,22 @@ class MainActivity : BaseActivity() {
                 )
             }
             is TextQuestion -> {
-                if (adapter.selectedText == null) null
-                else SurveyResponse(
-                        questionId = it.id,
-                        textAnswer = adapter.selectedText,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
-                )
+                val text = adapter.selectedText ?: throw NoAnswerException
+
+                if (text.length > it.length) {
+                    throw AnswerException(R.string.answer_too_large)
+                } else {
+                    SurveyResponse(
+                            questionId = it.id,
+                            textAnswer = text,
+                            surveyToken = surveyStatus.token,
+                            skipped = false
+                    )
+                }
+
             }
             is ChecklistQuestion -> {
-                if (adapter.selectedChecklist.isEmpty()) null
+                if (adapter.selectedChecklist.isEmpty()) throw NoAnswerException
                 else SurveyResponse(
                         questionId = it.id,
                         checklistAnswer = adapter.selectedChecklist,
@@ -155,7 +169,7 @@ class MainActivity : BaseActivity() {
                 )
             }
             is RangeQuestion -> {
-                if (adapter.selectedRange == null) null
+                if (adapter.selectedRange == null) throw NoAnswerException
                 else SurveyResponse(
                         questionId = it.id,
                         numberAnswer = adapter.selectedRange,
@@ -164,7 +178,7 @@ class MainActivity : BaseActivity() {
                 )
             }
             is NumberQuestion -> {
-                if (adapter.selectedNumber == null) null
+                if (adapter.selectedNumber == null) throw NoAnswerException
                 else SurveyResponse(
                         questionId = it.id,
                         numberAnswer = adapter.selectedNumber,
@@ -202,5 +216,11 @@ class MainActivity : BaseActivity() {
         binding.finishSurveyView.continueBtn.setOnClickListener {
             finish()
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 }
