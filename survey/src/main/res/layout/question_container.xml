@@ -30,8 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/spacing_large"
-            android:divider="@drawable/divider"
-            android:dividerHeight="1dp"
             android:scrollbarStyle="outsideOverlay"
             app:layout_constraintBottom_toTopOf="@+id/nextButton"
             app:layout_constraintTop_toTopOf="parent" />
