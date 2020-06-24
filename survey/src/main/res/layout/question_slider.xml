@@ -49,9 +49,8 @@
         app:layout_constraintTop_toBottomOf="@id/questionTitle" />
 
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@style/TextAppearance.AppCompat.Body1"
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_large"
@@ -75,7 +74,7 @@
         android:paddingEnd="@dimen/spacing_normal"
         app:layout_constraintEnd_toEndOf="@+id/guideVertical50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@id/slider" />
 
     <TextView
         android:id="@+id/maxValueText"
@@ -91,7 +90,7 @@
         android:paddingEnd="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideVertical50"
-        app:layout_constraintTop_toBottomOf="@id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@id/slider" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideVertical50"

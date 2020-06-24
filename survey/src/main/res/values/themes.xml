@@ -4,6 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="materialCardViewStyle">@style/Widget.SurveyApp.CardView</item>
         <item name="android:textAppearance">@style/TextAppearance.SurveyApp.Body1</item>
+        <item name="sliderStyle">@style/Widget.SurveyApp.Slider</item>
     </style>
 
     <style name="Theme.SurveyApp" parent="Theme.BaseSurveyApp" />

@@ -7,4 +7,9 @@
     <style name="TextAppearance.SurveyApp.Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="Widget.SurveyApp.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="thumbRadius">@dimen/slider_radius</item>
+        <item name="labelBehavior">gone</item>
+    </style>
 </resources>

@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.CompoundButton
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import pandemic.response.framework.databinding.*
 import pandemic.response.framework.dto.*
+import kotlin.math.roundToInt
 
 class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<*>>() {
 
@@ -204,33 +204,20 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
 
     inner class RangeViewHolder(private val binding: QuestionSliderBinding) :
             BaseViewHolder<RangeQuestion>(binding) {
-        override fun bind(question: RangeQuestion) {
-            binding.questionTitle.text = question.question
+        override fun bind(question: RangeQuestion) = binding.run {
+            questionTitle.text = question.question
+            slider.value = 0f
+//            slider.valueFrom = question.minValue.toFloat()
+//            slider.valueTo = question.maxValue.toFloat()
 
-            val min = question.minValue
-            val max = question.maxValue
-            val step = 1
+            minValueText.text = "${question.minValue}"
+            maxValueText.text = "${question.maxValue}"
 
-            binding.seekBar.progress = 0
-            binding.minValueText.text = "$min"
-            binding.maxValueText.text = "$max"
-            binding.minText.text = question.minText
-            binding.maxText.text = question.maxText
-            binding.seekBar.max = (max - min) / step
-            binding.seekBar.setOnSeekBarChangeListener(
-                    object : SeekBar.OnSeekBarChangeListener {
-                        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-                        override fun onStartTrackingTouch(seekBar: SeekBar) {}
-                        override fun onProgressChanged(
-                                seekBar: SeekBar,
-                                progress: Int,
-                                fromUser: Boolean
-                        ) {
-                            selectedRange = min + progress * step
-                        }
-                    }
-            )
+            minText.text = question.minText
+            maxText.text = question.maxText
+            slider.addOnChangeListener { _, value, _ -> selectedRange = value.roundToInt() }
         }
+
     }
 
     inner class TextViewHolder(private val binding: QuestionTextBinding) :
