@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import pandemic.response.framework.databinding.*
 import pandemic.response.framework.dto.*
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<*>>() {
@@ -209,7 +208,7 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
             BaseViewHolder<RangeQuestion>(binding) {
         override fun bind(question: RangeQuestion) = binding.run {
             questionTitle.text = question.question
-            slider.value = 0f
+            slider.value = question.minValue.toFloat()
             slider.valueFrom = question.minValue.toFloat()
             slider.valueTo = question.maxValue.toFloat()
             slider.stepSize = 1f
@@ -219,7 +218,6 @@ class QuestionViewPager : RecyclerView.Adapter<QuestionViewPager.BaseViewHolder<
             minText.text = question.minText
             maxText.text = question.maxText
             slider.addOnChangeListener { _, value, _ ->
-                Timber.d(value.roundToInt().toString())
                 selectedRange = value.roundToInt()
             }
         }
