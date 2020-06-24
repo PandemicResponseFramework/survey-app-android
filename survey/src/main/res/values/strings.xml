@@ -52,4 +52,5 @@
     <string name="agree_privacy_policy">I agree with the Privacy Policy</string>
     <string name="content_description_success">Success icon</string>
     <string name="button_cancel">Cancel</string>
+    <string name="answer_too_large">Your response exceed the characters limit</string>
 </resources>
