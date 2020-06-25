@@ -20,17 +20,19 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val SURVEY_ID = "surveyId"
-        const val TAG = "MainActivity"
+        const val SURVEY_FINISHED = "SURVEY_FINISHED"
+        const val SURVEY_NAME_ID = "SURVEY_NAME_ID"
     }
 
     private val adapter = QuestionViewPager()
 
     private lateinit var survey: Survey
     private lateinit var surveyStatus: SurveyStatus
+    private var surveyFinished = false
 
     private lateinit var questionIterator: QuestionIterator
 
-    val surveyId: String
+    private val surveyId: String
         get() = intent.extras?.getString(SURVEY_ID)!!
 
     private val binding by lazy {
@@ -42,8 +44,6 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.finishSurveyView.root.visibility = View.GONE
-        binding.questionView.visibility = View.VISIBLE
         binding.answerList.adapter = adapter
         binding.answerList.isUserInputEnabled = false
         binding.nextButton.setOnClickListener {
@@ -53,21 +53,38 @@ class MainActivity : BaseActivity() {
             skip()
         }
 
-        getSurveyQuestions()
+        savedInstanceState?.run {
+            surveyFinished = getBoolean(SURVEY_FINISHED)
+            intent.extras?.putString(SURVEY_ID, getString(SURVEY_NAME_ID))
+        }
+
+        binding.questionView.isVisible = !surveyFinished
+        binding.finishSurveyView.root.isVisible = surveyFinished
+
+        if (surveyFinished) {
+            showSurveyFinishView()
+        } else {
+            getSurveyQuestions()
+        }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(SURVEY_FINISHED, surveyFinished)
+        outState.putString(SURVEY_NAME_ID, surveyId)
+    }
 
     private fun getSurveyQuestions() =
-            lifecycleScope.launchWithPostponeLoading(::loading) {
-                try {
-                    val status = surveyRepo.getSurveyStatus(surveyId)
-                    title = status.title
-                    val survey = surveyRepo.getSurvey(surveyId)
-                    surveyLoaded(survey, status)
-                } catch (e: Throwable) {
-                    surveyError(e)
-                }
+        lifecycleScope.launchWithPostponeLoading(::loading) {
+            try {
+                val status = surveyRepo.getSurveyStatus(surveyId)
+                title = status.title
+                val survey = surveyRepo.getSurvey(surveyId)
+                surveyLoaded(survey, status)
+            } catch (e: Throwable) {
+                surveyError(e)
             }
+        }
 
     private fun surveyLoaded(survey: Survey, surveyStatus: SurveyStatus) {
         this.survey = survey
@@ -116,6 +133,7 @@ class MainActivity : BaseActivity() {
             displayQuestionDetails(nextQuestion)
         } else {
             showSurveyFinishView()
+            surveyFinished = true
         }
     }
 
@@ -124,10 +142,10 @@ class MainActivity : BaseActivity() {
             is BooleanQuestion -> {
                 if (adapter.selectedBool == null) throw NoAnswerException
                 else SurveyResponse(
-                        questionId = it.id,
-                        boolAnswer = adapter.selectedBool,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
+                    questionId = it.id,
+                    boolAnswer = adapter.selectedBool,
+                    surveyToken = surveyStatus.token,
+                    skipped = false
                 )
             }
             is ChoiceQuestion -> {
@@ -138,10 +156,10 @@ class MainActivity : BaseActivity() {
                     answerIds.add(it.answers[item].id)
                 }
                 SurveyResponse(
-                        questionId = it.id,
-                        answerIds = answerIds,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
+                    questionId = it.id,
+                    answerIds = answerIds,
+                    surveyToken = surveyStatus.token,
+                    skipped = false
                 )
             }
             is TextQuestion -> {
@@ -162,28 +180,28 @@ class MainActivity : BaseActivity() {
             is ChecklistQuestion -> {
                 if (adapter.selectedChecklist.isEmpty()) throw NoAnswerException
                 else SurveyResponse(
-                        questionId = it.id,
-                        checklistAnswer = adapter.selectedChecklist,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
+                    questionId = it.id,
+                    checklistAnswer = adapter.selectedChecklist,
+                    surveyToken = surveyStatus.token,
+                    skipped = false
                 )
             }
             is RangeQuestion -> {
                 if (adapter.selectedRange == null) throw NoAnswerException
                 else SurveyResponse(
-                        questionId = it.id,
-                        numberAnswer = adapter.selectedRange,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
+                    questionId = it.id,
+                    numberAnswer = adapter.selectedRange,
+                    surveyToken = surveyStatus.token,
+                    skipped = false
                 )
             }
             is NumberQuestion -> {
                 if (adapter.selectedNumber == null) throw NoAnswerException
                 else SurveyResponse(
-                        questionId = it.id,
-                        numberAnswer = adapter.selectedNumber,
-                        surveyToken = surveyStatus.token,
-                        skipped = false
+                    questionId = it.id,
+                    numberAnswer = adapter.selectedNumber,
+                    surveyToken = surveyStatus.token,
+                    skipped = false
                 )
             }
         }
@@ -191,9 +209,9 @@ class MainActivity : BaseActivity() {
 
     private fun getSkippedResponse(): SurveyResponse? = adapter.currentQuestion?.let {
         return SurveyResponse(
-                questionId = it.id,
-                surveyToken = surveyStatus.token,
-                skipped = true
+            questionId = it.id,
+            surveyToken = surveyStatus.token,
+            skipped = true
         )
     }
 
@@ -212,7 +230,7 @@ class MainActivity : BaseActivity() {
         binding.questionView.visibility = View.INVISIBLE
         binding.finishSurveyView.root.visibility = View.VISIBLE
         binding.finishSurveyView.thanksMessage.text =
-                String.format(resources.getString(R.string.thank_you), survey.nameId)
+            String.format(resources.getString(R.string.thank_you), surveyId)
         binding.finishSurveyView.continueBtn.setOnClickListener {
             finish()
         }
