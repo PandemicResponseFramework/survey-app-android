@@ -2,7 +2,7 @@ package pandemic.response.framework
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -49,8 +49,8 @@ class RegisterActivity : BaseActivity(), TermAndCondDialog.TermsConditionCallBac
     private fun loading() = binding.run {
         actionTitle.setText(R.string.register_access)
         actionMessage.text = null
-        button.visibility = View.INVISIBLE
-        progressBar.visibility = View.VISIBLE
+        button.isVisible = false
+        progressBar.isVisible = true
     }
 
     private fun success() {
@@ -62,10 +62,10 @@ class RegisterActivity : BaseActivity(), TermAndCondDialog.TermsConditionCallBac
         Timber.e(e, "registration token verification failed:")
         actionTitle.setText(R.string.register_failed)
         actionMessage.setText(R.string.register_failed_description)
-        button.visibility = View.VISIBLE
+        button.isVisible = true
         button.setText(R.string.action_retry)
         button.setOnClickListener { register() }
-        progressBar.visibility = View.INVISIBLE
+        progressBar.isVisible = false
     }
 
     private fun showTermAndConditionsDialog() {

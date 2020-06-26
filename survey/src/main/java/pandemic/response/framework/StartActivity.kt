@@ -3,7 +3,8 @@ package pandemic.response.framework
 import android.app.TaskStackBuilder
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import pandemic.response.framework.MainActivity.Companion.SURVEY_ID
 import pandemic.response.framework.databinding.ActionContainerBinding
 import pandemic.response.framework.steps.PERMISSION_ACTIVITY_RECOGNITION
@@ -107,9 +108,14 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun notRegistered(): Unit = binding.run {
         actionTitle.text = getString(R.string.invalid_access)
-        actionMessage.text = getString(R.string.invalid_access_description)
-        button.visibility = View.GONE
-        progressBar.visibility = View.INVISIBLE
+        actionMessage.text = HtmlCompat.fromHtml(getNoAccessContent(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        button.isVisible = false
+        progressBar.isVisible = false
     }
+
+    private fun getNoAccessContent(): String =
+            assets.open("no_access.html").bufferedReader().use {
+                it.readText()
+            }
 
 }
