@@ -108,6 +108,7 @@ class StartActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun notRegistered(): Unit = binding.run {
         actionTitle.text = getString(R.string.invalid_access)
+        actionTitle.isVisible = false
         actionMessage.text = HtmlCompat.fromHtml(getNoAccessContent(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         button.isVisible = false
         progressBar.isVisible = false
