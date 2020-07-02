@@ -7,10 +7,10 @@ import pandemic.response.framework.dto.Verification
 import pandemic.response.framework.network.RegisterApi
 
 class UserManager(
-        val clientId: String,
-        val clientSecret: String,
-        val prefs: SharedPreferences,
-        val registerApi: RegisterApi) {
+        private val clientId: String,
+        private val clientSecret: String,
+        private val prefs: SharedPreferences,
+        private val registerApi: RegisterApi) {
 
     private val KEY_TOKEN = "token"
     private val KEY_TERMS_CONDITIONS = "termsAndConditions"

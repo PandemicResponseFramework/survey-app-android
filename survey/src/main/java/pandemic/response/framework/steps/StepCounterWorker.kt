@@ -13,7 +13,7 @@ class StepCounterWorker(
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         try {
-            (applicationContext as SurveyBaseApp).stepsManager.sendSteps()
+            (applicationContext as SurveyBaseApp).stepsManager.sendSteps(System.currentTimeMillis())
             return Result.success()
         } catch (e: StepCounterException) {
             Timber.e(e, "StepCounterWorker error")

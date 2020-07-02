@@ -64,9 +64,8 @@ class StepsManager(val stepCounter: StepCounter,
         )
     }
 
-    suspend fun sendSteps() {
+    suspend fun sendSteps(time: Long) {
         val total = stepCounter.getStepCount()
-        val time = System.currentTimeMillis()
 
         storeStepTotal?.let { previous ->
             //the step counter can been rseted by rebooting the device in that case new total step count can be lower
