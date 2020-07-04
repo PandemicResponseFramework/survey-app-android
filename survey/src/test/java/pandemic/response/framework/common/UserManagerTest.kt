@@ -1,7 +1,10 @@
 package pandemic.response.framework.common
 
 import android.content.SharedPreferences
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.Assert.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -16,7 +19,7 @@ internal class UserManagerTest {
     private val expectedToken = "token14Token"
     private val verification = Verification("vToken", "cToken")
 
-    private var userManager = UserManager("test", "secret", preferences, registerApi);
+    private var userManager = UserManager("test", "secret", preferences, registerApi)
 
     @Test
     fun `Verify token when register is complete`() {
@@ -49,7 +52,7 @@ internal class UserManagerTest {
         userManager.termAndConditionAccepted = true
 
         //when
-        userManager = UserManager("test", "secret", preferences, registerApi);
+        userManager = UserManager("test", "secret", preferences, registerApi)
 
         //then
         assertTrue(userManager.termAndConditionAccepted)
@@ -62,7 +65,7 @@ internal class UserManagerTest {
         runBlocking { userManager.register(verification) }
 
         //when
-        userManager = UserManager("test", "secret", preferences, registerApi);
+        userManager = UserManager("test", "secret", preferences, registerApi)
 
         //then
         assertTrue(userManager.isRegistered())

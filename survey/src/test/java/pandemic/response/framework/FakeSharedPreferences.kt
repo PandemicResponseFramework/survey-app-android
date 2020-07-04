@@ -29,12 +29,12 @@ class FakeSharedPreferences : SharedPreferences {
             }
 
             override fun putLong(key: String, value: Long): SharedPreferences.Editor {
-                values[key] = value;
+                values[key] = value
                 return this
             }
 
             override fun putInt(key: String, value: Int): SharedPreferences.Editor {
-                values[key] = value;
+                values[key] = value
                 return this
             }
 
