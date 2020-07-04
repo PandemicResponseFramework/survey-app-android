@@ -31,5 +31,5 @@ data class ChoiceContainer(
         override val subQuestions: List<Question>
 ) : Container() {
     override fun matchAnswer(response: SurveyResponse): Boolean =
-            choiceDependsOn.contains(response.answerIds?.firstOrNull())
+            choiceDependsOn.intersect(response.answerIds ?: emptyList()).isNotEmpty()
 }
