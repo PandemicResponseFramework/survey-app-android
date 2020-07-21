@@ -16,17 +16,6 @@
     **[] values();
 }
 
--keepclassmembers class de.mouroum.uno_health_app.dto** {
-  <init>(...);
-  <fields>;
-}
-
--keep class kotlin.Metadata { *; }
-
--keepclassmembers class kotlin.Metadata {
-    public <methods>;
-}
-
 #okhttp
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**

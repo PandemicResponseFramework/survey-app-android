@@ -16,6 +16,7 @@ data class SurveyStatus(
         val endTime: Long?,
         val dependsOn: String?
 ) {
+    @JsonClass(generateAdapter = false)
     enum class Status {
         INCOMPLETE, COMPLETED, NEW
     }
