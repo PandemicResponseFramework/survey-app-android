@@ -43,9 +43,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 * **Marvin Mouroum** - *Initial work* - [marvinmouroum](https://gist.github.com/marvinmouroum)
 * **Marko Voß** - *Continued work* - [mk0](https://gist.github.com/mk0)
-* TODO
 
-See also the list of [contributors](https://github.com/OneTrackingFramework/survey-app-android/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/PandemicResponseFramework/survey-app-android/contributors) who participated in this project.
 
 ## License
 
